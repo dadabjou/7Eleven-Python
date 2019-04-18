@@ -44,8 +44,8 @@ OS_VERSION = os.getenv('OS_VERSION', settings.OS_VERSION)
 APP_VERSION = os.getenv('APP_VERSION', settings.APP_VERSION)
 
 # If we haven't set the API key or it is it's default value, quit the program
-if(API_KEY in [None,"changethis",""]):
-    sys.exit("ERROR: API_KEY is not set correctly.\nPlease set it in the settings.py or as an environment variable.")
+#if(API_KEY in [None,"changethis",""]):
+#    sys.exit("ERROR: API_KEY is not set correctly.\nPlease set it in the settings.py or as an environment variable.")
 
 
 def cheapestFuelAll():
