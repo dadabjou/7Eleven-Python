@@ -1,3 +1,4 @@
+#-*- coding: utf8 -*-
 '''
     7-Eleven Python implementation. This program allows you to lock in a fuel price from your computer.
     Copyright (C) 2018  Freyta
@@ -44,9 +45,10 @@ DEVICE_NAME = os.getenv('DEVICE_NAME', settings.DEVICE_NAME)
 OS_VERSION = os.getenv('OS_VERSION', settings.OS_VERSION)
 APP_VERSION = os.getenv('APP_VERSION', settings.APP_VERSION)
 
-# If we haven't set the API key or it is it's default value, quit the program
-#if(API_KEY in [None,"changethis",""]):
-#    sys.exit("ERROR: API_KEY is not set correctly.\nPlease set it in the settings.py or as an environment variable.")
+# If we haven't set the API key or it is it's default value, warn the user that we will disable the Google Maps search.
+if(API_KEY in [None,"changethis",""]):
+    custom_coords = False
+    print("Note: You have not set an API key. You will not be able to use Google to find a stores coordinates.\nBut you can still use the manual search if you know the postcode to the store you want to lock in from.\n\n\n\n\n")
 
 
 def cheapestFuelAll():
@@ -128,8 +130,7 @@ def lockedPrices():
                'X-OsName':'Android',
                'X-DeviceID':session['deviceID'],
                'X-AppVersion':APP_VERSION,
-               'X-DeviceSecret':session['deviceSecret'],
-               'Content-Type':'application/json; charset=utf-8'}
+               'X-DeviceSecret':session['deviceSecret']}
 
     response = requests.get(BASE_URL + "FuelLock/List", headers=headers)
     returnContent = json.loads(response.content)
@@ -190,8 +191,7 @@ def getStores():
                'X-OsVersion':OS_VERSION,
                'X-OsName':'Android',
                'X-DeviceID':deviceID,
-               'X-AppVersion':APP_VERSION,
-               'Content-Type':'application/json; charset=utf-8'}
+               'X-AppVersion':APP_VERSION}
 
     response = requests.get(BASE_URL + "store/StoresAfterDateTime/1001", headers=headers)
     return response.content
@@ -208,28 +208,25 @@ def getStoreAddress(storePostcode):
             # Since we have a match, return the latitude + longitude of our store
             return str(store['Latitude']), str(store['Longitude'])
 
+def getKey():
 
-def getKey(encryptedKey):
-  # Get the hex from the encrypted secret key and then split every 2nd character into an array row
-  hex_string = hashlib.sha1("om.sevenel").hexdigest()
-  hex_array = [hex_string[i:i+2] for i in range(0,len(hex_string),2)]
+    a = [103, 180, 267, 204, 390, 504, 497, 784, 1035, 520, 1155, 648, 988, 1456, 1785]
+    b = [50, 114, 327, 276, 525, 522, 371, 904, 1017, 810, 858, 852, 1274, 1148, 915]
+    c = [74, 220, 249, 416, 430, 726, 840, 568, 1017, 700, 1155, 912, 1118, 1372]
 
-  # Key is the returned key
-  key = ""
-  i = 0
+    length = len(a) + len(b) + len(c)
+    key = ""
 
-  # Get the unobfuscated key
-  while(i < len(encryptedKey)):
-    length = i%(len(hex_array))
-    key += chr( int(hex_array[length], 16) ^ int ( encryptedKey[i] ))
-
-    i = i + 1
-  return key
+    for i in range(length):
+        if(i % 3 == 0):
+            key += chr( int((a[int(i / 3)] / ((i / 3) + 1)) ))
+        if(i % 3 == 1):
+            key += chr( int((b[int((i - 1) / 3)] / (((i - 1) / 3) + 1)) ))
+        if(i % 3 == 2):
+            key += chr( int((c[int((i - 1) / 3)] / (((i - 2) / 3) + 1)) ))
+    return key
 
 # Generate the tssa string
-# Found in au.com.seveneleven.y.h - hard coded for now
-encryption_key = base64.b64decode("g2JZ9nYmS3EhNiVTWyG5xbqGsqq4QFiNi6GLLbVhRbw=")
-
 def generateTssa(URL, method, payload = None, accessToken = None):
 
     # Replace the https URL with a http one and convert the URL to lowercase
@@ -241,25 +238,21 @@ def generateTssa(URL, method, payload = None, accessToken = None):
     str3      = "yvktroj08t9jltr3ze0isf7r4wygb39s" + method + URL + str(timestamp) + uuidVar
     # If we have a payload to encrypt, then we encrypt it and add it to str3
     if(payload):
-        payload = base64.b64encode(hashlib.md5(payload).digest())
-        str3   += payload
-    signature = base64.b64encode(hmac.new(encryption_key, str3, digestmod=hashlib.sha256).digest())
+        payload = base64.b64encode(hashlib.md5(payload.encode()).digest())
+        str3   += payload.decode()
+        print (str3)
+    signature = base64.b64encode(hmac.new(encryption_key, str3.encode(), digestmod=hashlib.sha256).digest())
+
     # Finish building the tssa string
-    tssa = "tssa yvktroj08t9jltr3ze0isf7r4wygb39s:" + signature + ":" + uuidVar + ":" + str(timestamp)
-    print tssa
+    tssa = "tssa yvktroj08t9jltr3ze0isf7r4wygb39s:" + signature.decode() + ":" + uuidVar + ":" + str(timestamp)
     # If we have an access token append it to the tssa string
     if(accessToken):
         tssa += ":" + accessToken
 
     return tssa
 
-# key is the OBFUSCATED_APP_ID
-key       = getKey([36, 132, 5, 129, 42, 105, 114, 152, 34, 137, 126, 125, 93, 11, 117, 200, 157, 243,
-                    228, 226, 40, 210, 84, 134, 43, 56, 37, 144, 116, 137, 43, 45])
-# key2 is the OBFUSCATED_API_ID
-key2      = base64.b64decode(getKey([81, 217, 3, 192, 45, 88, 67, 253, 91, 164, 110, 13, 28, 57, 22, 225,
-                                     246, 233, 153, 224, 87, 152, 65, 253, 2, 115, 83, 197, 64, 156, 94,
-                                     41, 25, 27, 116, 153, 150, 161, 188, 166, 113, 130, 83, 143]))
+# Encryption key used for the TSSA
+encryption_key = bytes(base64.b64decode(getKey()))
 # The current time
 timeNow = int(time.time())
 
@@ -272,7 +265,10 @@ def index():
         session.pop('SuccessMessage', None)
         session.pop('fuelType', None)
         session.pop('LockinPrice', None)
-        lockedPrices()
+        try:
+            lockedPrices()
+        except:
+            pass
 
     # Get the cheapest fuel price to show on the automatic lock in page
     fuelPrice = cheapestFuelAll()
@@ -422,6 +418,12 @@ def lockin():
                     locLong = float(storeLatLng[1])
                     locLong += (random.uniform(0.01,0.000001) * random.choice([-1,1]))
                 else:
+                    # If we have made entered the wrong manual postcode for a store, and haven't
+                    # set the Google Maps API, return an error since we cant use the API
+                    if not custom_coords:
+                        # If it is, get the error message and return back to the index
+                        session['ErrorMessage'] = "Error: You entered a manual postcode where no 7Eleven store is. Please set a Google Maps API key or enter a valid postcode."
+                        return redirect(url_for('index'))
                     # Initiate the Google Maps API
                     gmaps = googlemaps.Client(key = API_KEY)
                     # Get the longitude and latitude from the submitted postcode
@@ -560,16 +562,16 @@ if __name__ == '__main__':
             # Check to see if the stores.json file is older than 1 week.
             # If it is, we will download a new version
             if(stores['AsOfDate'] < (time.time() - (60 * 60 * 24 * 7))):
-                with open('./stores.json', 'w') as f:
+                with open('./stores.json', 'wb') as f:
                     f.write(getStores())
         except:
             # Our json file isn't what we expected, so we will download a new one.
-            with open('./stores.json', 'w') as f:
+            with open('./stores.json', 'wb') as f:
                 f.write(getStores())
 
     else:
         # We have no stores.json file, so we wil download it
-        with open('./stores.json', 'w+') as f:
+        with open('./stores.json', 'wb') as f:
             f.write(getStores())
 
     droid = Android()
