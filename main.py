@@ -21,8 +21,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from androidhelper import Android
 
 # Used for getting/settings the OS environments and for writing/reading the stores.json file
-import sys, os
-# Used for sending requests to 7-Eleven and getting the response in a JSON format
+import sys, os, time
+# Used for sending requests to 7-Eleven and getting the response in a JSON format.
 import requests, json
 # Used for our randomly generated Device ID (if needed)
 import random
@@ -233,8 +233,8 @@ def save_settings():
             config.set('General', 'auto_lock_enabled', "False")
             session['auto_lock'] = False
 
-        # Set the max price to what the user wants as long as it's above 0 and below 2
-        if (float(request.form['max_price']) > 0 and float(request.form['max_price']) < 2):
+        # Set the max price to what the user wants as long as it's above 0 cents and below 2 dollars
+        if (float(request.form['max_price']) > 0 and float(request.form['max_price']) < 200):
             config.set('General', 'max_price', request.form['max_price'])
 
         # Save the config file
@@ -452,10 +452,13 @@ if __name__ == '__main__':
     config.read("./autolock.ini")
 
     # Start the autosearch scheduler
-    scheduler = BackgroundScheduler()
+    if(functions.TZ in [None,""]):
+        scheduler = BackgroundScheduler(timezone='UTC')
+    else:
+        scheduler = BackgroundScheduler(timezone=functions.TZ)
     # Start the price search thread and run it every 30 minutes
     scheduler.add_job(autolocker.start_lockin, 'interval', seconds=1800)
     scheduler.start()
 
-    app.secret_key = "Z"
-    app.run(host='0.0.0.0',debug=True)
+    app.secret_key = os.urandom(12)
+    app.run(host='0.0.0.0')
