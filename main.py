@@ -22,7 +22,7 @@ from androidhelper import Android
 
 # Optional Security
 # Uncomment Basic Auth section to enable basic authentication so users will be prompted a username and password before seeing the website.
-#from flask_basicauth import BasicAuth  
+#from flask_basicauth import BasicAuth
 
 # Uncomment SSL section to enable HTTPS (certificates required)
 #import ssl
@@ -129,6 +129,7 @@ def login():
                    'X-OsVersion':functions.OS_VERSION,
                    'X-OsName':'Android',
                    'X-DeviceID':session['DEVICE_ID'],
+                   'X-VmobID':functions.des_encrypt_string(session['DEVICE_ID']),
                    'X-AppVersion':functions.APP_VERSION,
                    'Content-Type':'application/json; charset=utf-8'}
 
@@ -211,6 +212,7 @@ def logout():
                'X-OsVersion':functions.OS_VERSION,
                'X-OsName':'Android',
                'X-DeviceID':session['DEVICE_ID'],
+               'X-VmobID':functions.des_encrypt_string(session['DEVICE_ID']),
                'X-AppVersion':functions.APP_VERSION,
                'X-DeviceSecret':session['deviceSecret'],
                'Content-Type':'application/json; charset=utf-8'}
@@ -249,10 +251,14 @@ def save_settings():
             config.set('General', 'auto_lock_enabled', "False")
             session['auto_lock'] = False
 
-        # Set the max price to what the user wants as long as it's above 0 cents and below 2 dollars
-        if (float(request.form['max_price']) > 0 and float(request.form['max_price']) < 200):
+        # Set the max price to what the user wants as long as it's above 1 dollar and below 2 dollars
+        # Note: Minimum price is $1 to try and avoid any 'honeypot stings' where premium unleaded
+        # is obviously too cheap for us to lock in.
+        if (float(request.form['max_price']) > 100 and float(request.form['max_price']) < 200):
             config.set('General', 'max_price', request.form['max_price'])
-
+        else:
+            session['ErrorMessage'] = "The price you tried to lock in was either too cheap or too expensive. It should be between 100 and 200cents"
+            return redirect(url_for('index'))
         # Save the config file
         with open('./autolock.ini', 'w') as configfile:
             config.write(configfile)
@@ -335,6 +341,7 @@ def lockin():
                        'X-OsVersion':functions.OS_VERSION,
                        'X-OsName':'Android',
                        'X-DeviceID':session['DEVICE_ID'],
+                       'X-VmobID':functions.des_encrypt_string(session['DEVICE_ID']),
                        'X-AppVersion':functions.APP_VERSION,
                        'X-DeviceSecret':session['deviceSecret'],
                        'Content-Type':'application/json; charset=utf-8'}
@@ -389,6 +396,7 @@ def lockin():
                    'X-OsVersion':functions.OS_VERSION,
                    'X-OsName':'Android',
                    'X-DeviceID':session['DEVICE_ID'],
+                   'X-VmobID':functions.des_encrypt_string(session['DEVICE_ID']),
                    'X-AppVersion':functions.APP_VERSION,
                    'X-DeviceSecret':session['deviceSecret'],
                    'Content-Type':'application/json; charset=utf-8'}
