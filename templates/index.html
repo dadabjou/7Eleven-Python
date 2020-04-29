@@ -98,21 +98,21 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
                          <div class="pic_info">
                              <h5>Welcome, {{ session['firstName'] }}.</h5>
 														 {% if session['fuelLockActive'][0] %}
-                             <h5 class='bold_balance'>Current fuel lock:</h5>
-                             <h4><strong class='bold_balance'>Expires</strong>: {{ session['fuelLockExpiry'] }}</h4>
-			     <br><h4>You have <strong class='bold_balance'>150</strong> litres of <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> locked in at <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
+                             <h5 class=''>Current fuel lock:</h5>
+                             <h4><strong class=''>Expires</strong>: {{ session['fuelLockExpiry'] }}</h4>
+			     <br><h4>You have <strong class=''>150</strong> litres of <strong class=''><span id="fueltypeconverted"></span></strong> locked in at <strong class=''>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
 														 {% if session['fuelLockActive'][1] %}
-                             <br><h5 class='bold_balance'>Previous fuel lock:</h5>
-                             <h4>Fuel lock expired: <strong class='bold_balance'>{{ session['fuelLockExpiry'] }}</strong></h4>
-                             <h4>Could have locked: <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h4>
-                             <h4>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
+                             <br><h5 class=''>Previous fuel lock:</h5>
+                             <h4>Fuel lock expired: <strong class=''>{{ session['fuelLockExpiry'] }}</strong></h4>
+                             <h4>Could have locked: <strong class=''><span id="fueltypeconverted"></span></strong> litres.</h4>
+                             <h4>Cents per litre: <strong class=''>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
 														 {% if session['fuelLockActive'][2] %}
-                             <br><h5 class='bold_balance'>Previous fuel lock:</h5>
-                             <h4>Redeemed: <strong class='bold_balance'>{{ session['fuelLockRedeemed'] }}</strong></h4>
-                             <h4>You locked in <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h4>
-                             <h4>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
+                             <br><h5 class=''>Previous fuel lock:</h5>
+                             <h4>Redeemed: <strong class=''>{{ session['fuelLockRedeemed'] }}</strong></h4>
+                             <h4>You locked in <strong class=''><span id="fueltypeconverted"></span></strong> litres.</h4>
+                             <h4>Cents per litre: <strong class=''>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
                          </div>
                          <div class="clear"></div>
