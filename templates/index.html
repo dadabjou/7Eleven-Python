@@ -22,11 +22,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	$(document).ready(function(){
 		$("#buttonpressed").hide();
 		$("#manual").fadeOut("fast");
+				$("#manual").hide();
+				$("#settings").hide();
+				$("#buttonpressed").hide();
+	      		$("#automatic").fadeIn("fast");
 	   $("#aauto").click(function(event){
 				$("#manual").hide();
 				$("#settings").hide();
 				$("#buttonpressed").hide();
-	      $("#automatic").fadeIn("fast");
+	      		$("#automatic").fadeIn("fast");
 	   });
 	   $("#aman").click(function(event){
 	       $("#automatic").hide();
@@ -48,13 +52,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	       $("#buttonpressed").fadeIn("fast");
 		 });
 	});
-</script>
-
-<script>
-  var balance = {{ session['cardBalance'] }};
-  if (balance > 0) {
-  alert("As of March 2020 you no longer require balance on your account to lock in fuel. Feel free to use up your balance when filling up, or in-store.");
-  }
 </script>
 	
 <script>
@@ -131,7 +128,6 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
 															 <input class="form-control mr-sm-2" type="text" placeholder="Email" name="email"><br><br>
 															 <input class="form-control mr-sm-2" type="password" placeholder="Password"  name="password"><br><br>
 															 <input class="form-control mr-sm-2" type="text" placeholder="Device ID (can be blank)" value="{{ device_id }}" maxlength="16"  name="device_id"><br><br>
-															 <label><input type="checkbox" name="auto_lockin"> Enable auto lock in</label><br><br>
 															 <button class="btn btn-lg btn-primary" type="submit" value="Login">Login</button>
 														 </form>
                          </div>

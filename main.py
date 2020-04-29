@@ -20,7 +20,7 @@
 
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from androidhelper import Android
+# from androidhelper import Android
 
 # Optional Security
 # Uncomment Basic Auth section to enable basic authentication so users will be prompted a username and password before seeing the website.
@@ -42,9 +42,9 @@ import googlemaps
 # Used for all of our custom settings and functions
 import settings, functions
 # Used for the auto locking function
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 # Used to load and save details from the autolock.ini config file and import our autolocker
-import autolocker, configparser
+# import autolocker, configparser
 
 
 # If we haven't set the API key or it is it's default value, warn the user that we will disable the Google Maps search.
@@ -91,7 +91,7 @@ def index():
         DEVICE_ID = os.getenv('DEVICE_ID', settings.DEVICE_ID)
 
     # Set the session max price for the auto locker
-    session['max_price'] = config['General']['max_price']
+    # session['max_price'] = config['General']['max_price']
 
     # Get the cheapest fuel price to show on the automatic lock in page
     fuelPrice = functions.cheapestFuelAll()
@@ -172,29 +172,29 @@ def login():
 
 
             # If we have ticked enable auto lock in, then set boolean to true
-            if(request.form.getlist('auto_lockin')):
-                config.set('General', 'auto_lock_enabled', "True")
-                session['auto_lock'] = True
-            else:
-                # We didn't want to save it, so set to false
-                config.set('General', 'auto_lock_enabled', "False")
-                session['auto_lock'] = False
+            # if(request.form.getlist('auto_lockin')):
+            #     config.set('General', 'auto_lock_enabled', "True")
+            #     session['auto_lock'] = True
+            # else:
+            #     # We didn't want to save it, so set to false
+            #     config.set('General', 'auto_lock_enabled', "False")
+            #     session['auto_lock'] = False
 
             # Save their log in anyway, so we can update the auto lock option later if needed
-            config.set('Account', 'deviceSecret', session['deviceSecret'])
-            config.set('Account', 'accessToken', session['accessToken'])
-            config.set('Account', 'cardBalance', session['cardBalance'])
-            config.set('Account', 'account_ID', session['accountID'])
-            config.set('Account', 'DEVICE_ID', session['DEVICE_ID'])
+            # config.set('Account', 'deviceSecret', session['deviceSecret'])
+            # config.set('Account', 'accessToken', session['accessToken'])
+            # config.set('Account', 'cardBalance', session['cardBalance'])
+            # config.set('Account', 'account_ID', session['accountID'])
+            # config.set('Account', 'DEVICE_ID', session['DEVICE_ID'])
 
-            # If we have an active fuel lock, set fuel_lock_saved to true, otherwise false
-            if(session['fuelLockStatus'] == 0):
-                config.set('Account', 'fuel_lock_saved', "True")
-            else:
-                config.set('Account', 'fuel_lock_saved', "False")
-            # Write the config to file
-            with open('./autolock.ini', 'w') as configfile:
-                config.write(configfile)
+            # # If we have an active fuel lock, set fuel_lock_saved to true, otherwise false
+            # if(session['fuelLockStatus'] == 0):
+            #     config.set('Account', 'fuel_lock_saved', "True")
+            # else:
+            #     config.set('Account', 'fuel_lock_saved', "False")
+            # # Write the config to file
+            # with open('./autolock.ini', 'w') as configfile:
+            #     config.write(configfile)
 
             return redirect(url_for('index'))
     else:
@@ -476,26 +476,26 @@ if __name__ == '__main__':
             f.write(functions.getStores())
 
     # Check if the autolock.ini file exists, if it doesn't create it.
-    if not (os.path.exists("./autolock.ini")):
-        autolocker.create_ini()
+    # if not (os.path.exists("./autolock.ini")):
+    #     autolocker.create_ini()
 
     # Open the config file and read the settings
-    config = configparser.ConfigParser()
-    config.read("./autolock.ini")
+    # config = configparser.ConfigParser()
+    # config.read("./autolock.ini")
 
-    # Start the autosearch scheduler
-    if(functions.TZ in [None,""]):
-        scheduler = BackgroundScheduler(timezone='UTC')
-    else:
-        scheduler = BackgroundScheduler(timezone=functions.TZ)
-    # Start the price search thread and run it every 30 minutes
-    scheduler.add_job(autolocker.start_lockin, 'interval', seconds=1800)
-    scheduler.start()
+    # # Start the autosearch scheduler
+    # if(functions.TZ in [None,""]):
+    #     scheduler = BackgroundScheduler(timezone='UTC')
+    # else:
+    #     scheduler = BackgroundScheduler(timezone=functions.TZ)
+    # # Start the price search thread and run it every 30 minutes
+    # scheduler.add_job(autolocker.start_lockin, 'interval', seconds=1800)
+    # scheduler.start()
 
-    droid = Android()
-    uri2open = 'http://0.0.0.0:5000'
-    intent2start = droid.makeIntent("android.intent.action.VIEW", uri2open, "text/html", None, [u"android.intent.category.BROWSABLE"], None, None, None)
-    print(droid.startActivityForResultIntent(intent2start.result))
+    # droid = Android()
+    # uri2open = 'http://0.0.0.0:5000'
+    # intent2start = droid.makeIntent("android.intent.action.VIEW", uri2open, "text/html", None, [u"android.intent.category.BROWSABLE"], None, None, None)
+    # print(droid.startActivityForResultIntent(intent2start.result))
 
     app.secret_key = os.urandom(12)
     app.run(host='0.0.0.0')
