@@ -495,7 +495,7 @@ if __name__ == '__main__':
     droid = Android()
     uri2open = 'http://0.0.0.0:5000'
     intent2start = droid.makeIntent("android.intent.action.VIEW", uri2open, "text/html", None, [u"android.intent.category.BROWSABLE"], None, None, None)
-    # print(droid.startActivityForResultIntent(intent2start.result))
+    print(droid.startActivityForResultIntent(intent2start.result))
 
     app.secret_key = os.urandom(12)
     app.run(host='0.0.0.0')
