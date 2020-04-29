@@ -86,7 +86,7 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
 </head>
 <body onload="convertfueltype();">
 <!-- main -->
-<div class="audio-main w3ls">
+<div class="w3ls">
 	<div class="audio-record-list">
 	<div class="profile">
 			 <div class="profile-top wthree">
@@ -96,24 +96,23 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
                              <img src="../static/images/7-eleven_logo.svg" alt=""/>
                          </div>
                          <div class="pic_info">
-                             <h2>Welcome, {{ session['firstName'] }}.</h2>
-                             <h2>Your current account balance is: <strong class='bold_balance'>${{ session['cardBalance'] }}.</strong></h2>
+                             <h5>Welcome, {{ session['firstName'] }}.</h5>
 														 {% if session['fuelLockActive'][0] %}
-                             <h4 class='bold_balance'>Current fuel lock:</h4>
-                             <br><h3><strong class='bold_balance'>Expires</strong>: {{ session['fuelLockExpiry'] }}</h3>
-			     <br><h3>You have <strong class='bold_balance'>150</strong> litres of <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> locked in at <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h3>
+                             <h5 class='bold_balance'>Current fuel lock:</h5>
+                             <h4><strong class='bold_balance'>Expires</strong>: {{ session['fuelLockExpiry'] }}</h4>
+			     <br><h4>You have <strong class='bold_balance'>150</strong> litres of <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> locked in at <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
 														 {% if session['fuelLockActive'][1] %}
-                             <br><h4 class='bold_balance'>Previous fuel lock:</h4>
-                             <h3>Fuel lock expired: <strong class='bold_balance'>{{ session['fuelLockExpiry'] }}</strong></h3>
-                             <h3>Could have locked: <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h3>
-                             <h3>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h3>
+                             <br><h5 class='bold_balance'>Previous fuel lock:</h5>
+                             <h4>Fuel lock expired: <strong class='bold_balance'>{{ session['fuelLockExpiry'] }}</strong></h4>
+                             <h4>Could have locked: <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h4>
+                             <h4>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
 														 {% if session['fuelLockActive'][2] %}
-                             <br><h4 class='bold_balance'>Previous fuel lock:</h4>
-                             <h3>Redeemed: <strong class='bold_balance'>{{ session['fuelLockRedeemed'] }}</strong></h3>
-                             <h3>You locked in <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h3>
-                             <h3>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h3>
+                             <br><h5 class='bold_balance'>Previous fuel lock:</h5>
+                             <h4>Redeemed: <strong class='bold_balance'>{{ session['fuelLockRedeemed'] }}</strong></h4>
+                             <h4>You locked in <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> litres.</h4>
+                             <h4>Cents per litre: <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h4>
 														 {% endif %}
                          </div>
                          <div class="clear"></div>
@@ -122,11 +121,11 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
                               <img src="../static/images/7-eleven_logo.svg" alt=""/>
                          </div>
                          <div class="pic_info">
-                             <h2>Please enter your email and password below:<br><br></h2>
+                             <h3>Please enter your email and password below:<br><br></h3>
 														 <form class="form-inline mt-2 mt-md-0" action="/login" method="POST">
-															 <input class="form-control mr-sm-2" type="text" placeholder="Email" name="email"><br><br>
-															 <input class="form-control mr-sm-2" type="password" placeholder="Password"  name="password"><br><br>
-															 <input class="form-control mr-sm-2" type="text" placeholder="Device ID (can be blank)" value="{{ device_id }}" maxlength="16"  name="device_id"><br><br>
+															 <input class="form-control mr-sm-2" type="text" placeholder="Email" name="email"><br>
+															 <input class="form-control mr-sm-2" type="password" placeholder="Password"  name="password"><br>
+															 <input class="form-control mr-sm-2" type="text" placeholder="Device ID (can be blank)" value="{{ device_id }}" maxlength="16"  name="device_id"><br>
 															 <button class="btn btn-lg btn-primary" type="submit" value="Login">Login</button>
 														 </form>
                          </div>
@@ -135,13 +134,13 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
 				 </div>
 				 <div class="media">
 					 {% if session['ErrorMessage'] %}
-					 	<h2>Oops, error:</h2>
-						<h3>{{ session['ErrorMessage'] }}</h3>
-						<h3><a href="?action=refresh">Refresh</a></h3>
+					 	<h3>Oops, error:</h3>
+						<h4>{{ session['ErrorMessage'] }}</h4>
+						<h4><a href="?action=refresh">Refresh</a></h4>
 					 {% elif session['SuccessMessage'] %}
-					 	<h2>Success!!</h2>
-						<h3>{{ session['SuccessMessage'] }}</h3>
-						<h3><a href="?action=refresh">Refresh</a></h3>
+					 	<h3>Success!!</h3>
+						<h4>{{ session['SuccessMessage'] }}</h4>
+						<h4><a href="?action=refresh">Refresh</a></h4>
 					 {% elif session['firstName'] %}
 							{% block content %}{% endblock %}
 					 {% endif %}
