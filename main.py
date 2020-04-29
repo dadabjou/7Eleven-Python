@@ -20,7 +20,7 @@
 
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-# from androidhelper import Android
+from androidhelper import Android
 
 # Optional Security
 # Uncomment Basic Auth section to enable basic authentication so users will be prompted a username and password before seeing the website.
@@ -492,9 +492,9 @@ if __name__ == '__main__':
     # scheduler.add_job(autolocker.start_lockin, 'interval', seconds=1800)
     # scheduler.start()
 
-    # droid = Android()
-    # uri2open = 'http://0.0.0.0:5000'
-    # intent2start = droid.makeIntent("android.intent.action.VIEW", uri2open, "text/html", None, [u"android.intent.category.BROWSABLE"], None, None, None)
+    droid = Android()
+    uri2open = 'http://0.0.0.0:5000'
+    intent2start = droid.makeIntent("android.intent.action.VIEW", uri2open, "text/html", None, [u"android.intent.category.BROWSABLE"], None, None, None)
     # print(droid.startActivityForResultIntent(intent2start.result))
 
     app.secret_key = os.urandom(12)
