@@ -394,7 +394,7 @@ color:#fff;
 }
 @media (max-width: 991px){
 	.audio-main {
-	  padding: 3em 0 0em 0;
+	  padding: 0em 0 0em 0;
 	}
 	.audio-main h1 {
 	  margin-bottom: 35px;
