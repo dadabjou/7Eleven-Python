@@ -99,7 +99,7 @@ document.getElementById("fueltypeconverted").innerHTML = fueltype;
                              <h2>Welcome, {{ session['firstName'] }}.</h2>
                              <h2>Your current account balance is: <strong class='bold_balance'>${{ session['cardBalance'] }}.</strong></h2>
 														 {% if session['fuelLockActive'][0] %}
-                             <br><h4 class='bold_balance'>Current fuel lock:</h4>
+                             <h4 class='bold_balance'>Current fuel lock:</h4>
                              <br><h3><strong class='bold_balance'>Expires</strong>: {{ session['fuelLockExpiry'] }}</h3>
 			     <br><h3>You have <strong class='bold_balance'>150</strong> litres of <strong class='bold_balance'><span id="fueltypeconverted"></span></strong> locked in at <strong class='bold_balance'>{{ session['fuelLockCPL'] }}</strong></h3>
 														 {% endif %}
